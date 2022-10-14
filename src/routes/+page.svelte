@@ -21,6 +21,11 @@
         if (!import.meta.env.SSR) {
             let xoff = mouseX / (window.innerWidth / 2) - 1;
             let yoff = mouseY / (window.innerHeight / 2) - 1;
+
+            if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                xoff = 0;
+                yoff = 0;
+            }
             
             transform(els.hero, xoff, yoff, 40);
             transform(els.front, xoff, yoff, 100);
@@ -44,8 +49,12 @@
         i = setInterval(() => {
             current += src.at(current.length);
 
-            if (current.length == src.length) {
+            if (current.length >= src.length) {
                 current = "";
+            }
+
+            if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                current = src;
             }
         }, 1)
     })
@@ -55,21 +64,24 @@
 
 <div class="hero-root">
     <div style:position="relative" style:height="100vh">
-        <div class="hero" bind:this={els.hero}></div>
-        <div class="hero-wrapper" bind:this={els.front}>Applejuice</div>
-        <div class="hero-pattern" bind:this={els.pattern}></div>
+        <div aria-hidden="true" class="hero" bind:this={els.hero}></div>
+        <h1 class="hero-wrapper" bind:this={els.front}>Applejuice</h1>
+        <div aria-hidden="true" class="hero-pattern" bind:this={els.pattern}></div>
 
-        <div class="deco-box squared-box"  style:background-repeat="repeat" style:background-image="url({rects})" style:left="50px" style:bottom="50px" style:width="50%" style:height="200px" bind:this={els.box1}/>
-        <div class="deco-box" style:font-family="monospace" style:white-space="pre" style:color="#00ffff" style:font-size="0.1em" style:right="50px" style:top="50px" style:width="50%" style:height="200px" bind:this={els.box2}>{current}</div>
+        <div aria-hidden="true" class="deco-box squared-box"  style:background-repeat="repeat" style:background-image="url({rects})" style:left="50px" style:bottom="50px" style:width="50%" style:height="200px" bind:this={els.box1}/>
+        <div aria-hidden="true" class="deco-box" style:font-family="monospace" style:white-space="pre" style:color="#00ffff" style:font-size="0.2em" style:right="50px" style:top="50px" style:width="50%" style:height="200px" bind:this={els.box2}>{current}</div>
 
-        <div class="deco-box" style:left="50px" style:top="50px" style:width="100px" style:height="50px" bind:this={els.box3}/>
+        <div aria-hidden="true" class="deco-box" style:left="50px" style:top="50px" style:width="100px" style:height="50px" bind:this={els.box3}/>
         
-        <div class="deco-box" style:right="50px" style:bottom="50px" style:width="100px" style:height="50px" bind:this={els.box4}/>
+        <div aria-hidden="true" class="deco-box" style:right="50px" style:bottom="50px" style:width="100px" style:height="50px" bind:this={els.box4}/>
     </div>
 </div>
 
+<div class="tape">To be done</div>
+<div class="tape-reverse" aria-hidden="true">To be done</div>
+
 <div class="projects">
-    What you expected an actual website? Naahh get a hero page and you're lucky
+    For now just look at 2 of my projects, some are coming soon
     <a class="project" href="/connected" rel="external">Connected (Logic gates game)</a>
     <a class="project" href="/figs" rel="external">Browser figura docs</a>
 </div>
@@ -77,12 +89,30 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
+    .tape {
+        border-bottom: 10px solid;
+        border-image: url("$lib/mainpage/tbd.svg") round;
+        border-image-slice: 80 0;
+        margin-top: 10%;
+        transform: rotate(10deg);
+    }
+
+    .tape-reverse {
+        transform: rotate(190deg);
+    }
+
+    .tape::before, .tape-reverse::before {
+        content: "";
+        width: 20px;
+        display: inline-block;
+    }
+
     .hero-root {
         height: 110vh;
 
         overflow: hidden;
         position: relative;
-        font-size: min(40vh, 10vw);
+        font-size: min(20vh, 5vw);
         filter: grayscale(100%) brightness(0.7);
 
         clip-path: polygon(0 0, 100% 0, 100% 100%, 70% 93%, 60% 95%, 50% 93%, 30% 100%, 20% 93%, 0 100%);
@@ -129,8 +159,10 @@
         animation: prompter 3s infinite;
     }
 
-    .squared-box {
-        animation: switch 1s infinite;
+    @media (prefers-reduced-motion: no-preference) {
+        .squared-box {
+            animation: switch 1s infinite;
+        }
     }
 
     @keyframes switch {
@@ -213,6 +245,7 @@
     @media (prefers-color-scheme: dark) {
         :global(body) {
             background-color: black;
+            color: white;
         }
     }
 </style>

@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+    width='60' height='20' viewPort='0 0 100 100'>
+    <!-- put some content in here -->
+    <rect width="60" height="20" fill="#000000"/>
+    <polygon points="20 0 50 0 30 20 0 20" fill="#d1ae00" />
+</svg>
